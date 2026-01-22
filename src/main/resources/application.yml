@@ -3,10 +3,7 @@ spring:
     name: assembly-service
 
   profiles:
-
-
-
-    active: ${ENV:dev}
+    active: dev
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -16,26 +13,13 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: false
     open-in-view: true
 
   flyway:
-    enabled: on
+    enabled: true
 
 server:
   port: 8080
   forward-headers-strategy: framework
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,prometheus
-  endpoint:
-    health:
-      show-details: always
-    metrics:
-      access: read_only
-    prometheus:
-      access: read_only
