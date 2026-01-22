@@ -1,0 +1,68 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Build JAR with Gradle
+        run: ./gradlew clean build -x test
+
+      - name: Run tests
+        run: ./gradlew test
+
+      # Configure Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Install doctl (CLI oficial)
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_API_TOKEN }}
+
+      # Login no registry via doctl (recomendado pela DigitalOcean)
+      - name: Authenticate Docker with DOCR
+        run: doctl registry login
+
+      # Build & Push
+      - name: Build and Push Docker image
+        run: |
+          IMAGE="registry.digitalocean.com/${{ secrets.DOCR_REGISTRY }}/assembly-service-app:latest"
+          docker build -t $IMAGE .
+          docker push $IMAGE
+
+      # Copia chave SSH para o agente
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DROPLET_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.DROPLET_IP }} >> ~/.ssh/known_hosts
+
+      # Deploy no Droplet
+      - name: Deploy on Droplet
+        run: |
+          ssh root@${{ secrets.DROPLET_IP }} "
+          doctl auth init ${{ secrets.DO_API_TOKEN }}
+          doctl registry login &&
+          docker pull registry.digitalocean.com/${{ secrets.DOCR_REGISTRY }}/assembly-service-app:latest &&
+          docker-compose stop assembly-service-app || true &&
+          docker-compose rm assembly-service-app || true &&
+          docker-compose up -d assembly-service-app
+          "
