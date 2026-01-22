@@ -9,6 +9,11 @@ Assembly Service é um desafio técnico do SICREDI onde serviço tem como objeti
 - **FlyWay**
 - **Lombok**
 
+## Deploy automatizado
+O deploy da aplicação é feito automaticamente via GitHub Actions para um servidor cloud na Digital Ocean sempre que há um push na branch main.
+
+Link da pipeline: [GitHub Actions](https://github.com/leoribesi/assembly-service/actions)
+
 ## Como Iniciar a Aplicação
 
 ### Para iniciar a aplicação via docker
