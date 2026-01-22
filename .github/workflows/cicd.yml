@@ -62,7 +62,15 @@ jobs:
           doctl auth init ${{ secrets.DO_API_TOKEN }}
           doctl registry login &&
           docker pull registry.digitalocean.com/${{ secrets.DOCR_REGISTRY }}/assembly-service-app:latest &&
-          docker-compose stop assembly-service-app || true &&
-          docker-compose rm assembly-service-app || true &&
-          docker-compose up -d assembly-service-app
+          docker stop assembly-service-app || true &&
+          docker rm assembly-service-app || true &&
+          docker run -d \
+            --restart=unless-stopped \
+            --name assembly-service-app \
+            -m 512m \
+            --memory-swap=512m \
+            --network my-network \
+            -e DATABASE_URL='${{ secrets.DATABASE_URL }}' \
+            -e PASSWORD_DB='${{ secrets.PASSWORD_DB }}' \
+            registry.digitalocean.com/${{ secrets.DOCR_REGISTRY }}/assembly-service-app:latest
           "
