@@ -69,7 +69,7 @@ jobs:
             --name assembly-service-app \
             -m 512m \
             --memory-swap=512m \
-            --network api-network \
+            --network root_api-network \
             -e DATABASE_URL='${{ secrets.DATABASE_URL }}' \
             -e PASSWORD_DB='${{ secrets.PASSWORD_DB }}' \
             registry.digitalocean.com/${{ secrets.DOCR_REGISTRY }}/assembly-service-app:latest
