@@ -4,6 +4,7 @@ import com.assembly.assembly_service.associate.create.CreateAssociateService;
 import com.assembly.assembly_service.associate.create.models.AssociateRequest;
 import com.assembly.assembly_service.associate.create.models.AssociateResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class AssociateController {
 
     @Operation(summary = "Cria um novo Associado")
     @PostMapping()
-    public ResponseEntity<AssociateResponse> create(@RequestBody AssociateRequest associateRequest) {
+    public ResponseEntity<AssociateResponse> create(@RequestBody @Valid AssociateRequest associateRequest) {
         var associateResponse = createAssociateService.create(associateRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(associateResponse);
     }

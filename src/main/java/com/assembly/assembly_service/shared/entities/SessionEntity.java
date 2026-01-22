@@ -2,11 +2,8 @@ package com.assembly.assembly_service.shared.entities;
 
 import com.assembly.assembly_service.agenda.create.models.AgendaResponse;
 import com.assembly.assembly_service.session.create.models.SessionResponse;
-import com.assembly.assembly_service.shared.enums.StatusEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -35,9 +32,6 @@ public class SessionEntity extends AbstractEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "session", orphanRemoval = true)
     private List<VoteEntity> votes;
-
-    @Enumerated(EnumType.STRING)
-    private StatusEnum status;
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;

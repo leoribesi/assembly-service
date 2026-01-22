@@ -8,6 +8,7 @@ import com.assembly.assembly_service.session.vote.register.models.VoteRequest;
 import com.assembly.assembly_service.session.vote.result.ResultVoteService;
 import com.assembly.assembly_service.session.vote.result.models.VoteResults;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +29,14 @@ public class SessionController {
 
     @Operation(summary = "Cria uma nova Sessão de Votação")
     @PostMapping()
-    public ResponseEntity<SessionResponse> create(@RequestBody SessionRequest sessionRequest) {
+    public ResponseEntity<SessionResponse> create(@RequestBody @Valid SessionRequest sessionRequest) {
         var sessionResponse = createSessionService.create(sessionRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(sessionResponse);
     }
 
     @Operation(summary = "Registra um voto em uma Sessão de Votação")
     @PostMapping("/{id}/votes")
-    public ResponseEntity<Void> register(@PathVariable Long id, @RequestBody VoteRequest voteRequest) {
+    public ResponseEntity<Void> register(@PathVariable Long id, @RequestBody @Valid  VoteRequest voteRequest) {
         registerVoteService.register(id, voteRequest);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }

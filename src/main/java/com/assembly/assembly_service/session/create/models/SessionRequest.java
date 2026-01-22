@@ -2,12 +2,13 @@ package com.assembly.assembly_service.session.create.models;
 
 import com.assembly.assembly_service.shared.entities.AgendaEntity;
 import com.assembly.assembly_service.shared.entities.SessionEntity;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
 public record SessionRequest(
+        @NotNull(message = "O ID da pauta é obrigatório")
         Long agendaId,
-        Long associateId,
         LocalDateTime startTime,
         LocalDateTime endTime
 ) {

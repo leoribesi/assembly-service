@@ -11,7 +11,6 @@ public record SessionResponse(
         Long id,
         AgendaResponse agenda,
         VoteEnum vote,
-        AssociateResponse associate,
         LocalDateTime startTime,
         LocalDateTime endTime
 ) {
